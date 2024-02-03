@@ -1,9 +1,9 @@
 {
   "development": {
-    "username": "root",
-    "password": "aman@80806431",
-    "database": "jobharbor_base",
-    "host": "127.0.0.1",
+    "username": "uskssqbsppfbqadj",
+    "password": "BwdNmzZjoWRpjP7fwRT3",
+    "database": "bmjdcjv5grpk5jepvjec",
+    "host": "bmjdcjv5grpk5jepvjec-mysql.services.clever-cloud.com",
     "dialect": "mysql"
   },
   "test": {
