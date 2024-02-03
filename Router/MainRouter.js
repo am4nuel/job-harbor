@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const path = require("path");
+
 const { Op } = require("sequelize");
 const {
   Users,
@@ -27,10 +27,7 @@ router.post("/", async (req, res) => {
   await Users.create(bod);
   res.send(bod);
 });
-app.use(express.static(path.join(__dirname, "dist")));
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "dist", "index.html"));
-});
+
 router.get("/admins", async (req, res) => {
   const userData = await Admins.findAll();
   res.json(userData);
