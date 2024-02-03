@@ -209,45 +209,41 @@ router.post("/addrequirementtoorder", async (req, res) => {
   });
 });
 router.get("/orders", async (req, res) => {
-  if (req.query.value.userType === "admin") {
-    const orders = await ServiceOrder.findAll();
-    res.send(orders);
-  } else {
-    const orders = await ServiceOrder.findAll({
-      where: { userId: req.query.value.userID },
-    });
-    console.log(req.query.value.userID);
-    res.send(orders);
-  }
+  const orders = await ServiceOrder.findAll();
+  res.send(orders);
 });
 router.get("/orderrequirements", async (req, res) => {
-  console.log(req.query);
-  if (req.query.value.userType !== "admin") {
-    const orders = await OrderedRequirements.findAll({
-      where: { orderId: req.query.value.orderId },
-    });
-    res.send(orders);
-  } else {
-    const orders = await OrderedRequirements.findAll();
-    res.send(orders);
-  }
+  const orders = await OrderedRequirements.findAll();
+  res.send(orders);
 });
 router.get("/projects", async (req, res) => {
-  if (req.query.value.userType !== "admin") {
-    const clean = req.query.value.serviceId?.map((item) => {
-      return item.slice(2, -1);
-    });
-
-    const orders = await Services.findAll({
-      where: { id: clean },
-    });
-    res.send(orders);
-  } else {
-    const orders = await ServiceOrder.findAll();
-    const services = await Services.findAll();
-    const users = await Users.findAll();
-    res.send({ orders: orders, services: services, users: users });
-    console.log("working");
-  }
+  const orders = await ServiceOrder.findAll();
+  const services = await Services.findAll();
+  const users = await Users.findAll();
+  res.send({ orders: orders, services: services, users: users });
+  console.log("working");
+});
+router.get("/personalprojects", async (req, res) => {
+  const clean = req.query.value.serviceId?.map((item) => {
+    return item.slice(2, -1);
+  });
+  const orders = await Services.findAll({
+    where: { id: clean },
+  });
+  res.send(orders);
+  console.log("projects", req.query);
+});
+router.get("/personalorderrequirements", async (req, res) => {
+  console.log("ordreqs", req.query);
+  const orders = await OrderedRequirements.findAll({
+    where: { orderId: req.query.value.orderId },
+  });
+  res.send(orders);
+});
+router.get("/personalorders", async (req, res) => {
+  const orders = await ServiceOrder.findAll({
+    where: { userId: req.query.value.userID },
+  });
+  res.send(orders);
 });
 module.exports = router;
