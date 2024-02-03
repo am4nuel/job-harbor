@@ -1,7 +1,6 @@
 const express = require("express");
 const app = express();
 const db = require("./models");
-const path = require("path");
 const cors = require("cors");
 const mainRouter = require("./Router/MainRouter");
 app.use(express.json());
@@ -21,12 +20,8 @@ app.use(
     store: sessionStore,
   })
 );
-
 app.use("/register", mainRouter);
-app.use(express.static(path.join(__dirname, "dist")));
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "dist", "index.html"));
-});
+
 function generateUniqueId() {
   // Generate a random number and convert it to a string
   const randomPart = Math.random().toString(36).substring(2, 10);
