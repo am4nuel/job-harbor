@@ -23,9 +23,7 @@ app.use(
 );
 
 app.use("/register", mainRouter);
-app.get("/", (req, res) => {
-  res.send("hello World");
-});
+
 function generateUniqueId() {
   // Generate a random number and convert it to a string
   const randomPart = Math.random().toString(36).substring(2, 10);
