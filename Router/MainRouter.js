@@ -198,7 +198,6 @@ router.post("/serviceRequirement", async (req, res) => {
     console.log(element);
     await ServiceRequirements.create(element);
   });
-
   res.json(bod);
 });
 router.post("/placeorder", async (req, res) => {
