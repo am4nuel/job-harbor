@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 
-const { Op } = require("sequelize");
 const {
   Users,
   Admins,
@@ -9,6 +8,7 @@ const {
   ServiceRequirements,
   Skills,
   UserSkills,
+  Works,
   ServiceOrder,
   OrderedRequirements,
   UserLanguages,
@@ -27,7 +27,6 @@ router.post("/", async (req, res) => {
   await Users.create(bod);
   res.send(bod);
 });
-
 router.get("/admins", async (req, res) => {
   const userData = await Admins.findAll();
   res.json(userData);
@@ -49,6 +48,20 @@ router.post("/update", async (req, res) => {
     },
   });
   res.send(req.body);
+});
+router.post("/works", async (req, res) => {
+  console.log(req.body);
+  req.body.fileLink.forEach(async (element) => {
+    await Works.create({
+      userId: req.body.userId,
+      fileLink: element,
+    });
+  });
+  res.send("Done");
+});
+router.get("/works", async (req, res) => {
+  const data = await Works.findAll();
+  res.send(data);
 });
 router.post("/updateuserdata", async (req, res) => {
   let allData = {
@@ -165,7 +178,6 @@ router.get("/skills", async (req, res) => {
       userData = await Skills.findAll();
       res.json(userData);
       break;
-
     case "profession":
       userData = await Professions.findAll();
       res.json(userData);
@@ -229,23 +241,28 @@ router.get("/personalprojects", async (req, res) => {
   const clean = req.query.value.serviceId?.map((item) => {
     return item.slice(2, -1);
   });
-  const orders = await Services.findAll({
-    where: { id: clean },
-  });
-  res.send(orders);
-  console.log("projects", req.query);
+  console.log(clean);
+  if (clean !== undefined) {
+    const orders = await Services.findAll({
+      where: { id: clean },
+    });
+    res.send(orders);
+  } else {
+    console.log("No Orders yet");
+  }
 });
 router.get("/personalorderrequirements", async (req, res) => {
   console.log("ordreqs", req.query);
   const orders = await OrderedRequirements.findAll({
-    where: { orderId: req.query.value.orderId },
+    where: { orderId: req.query.value?.orderId },
   });
   res.send(orders);
 });
 router.get("/personalorders", async (req, res) => {
   const orders = await ServiceOrder.findAll({
-    where: { userId: req.query.value.userID },
+    where: { userId: req.query.value?.userID },
   });
   res.send(orders);
 });
+
 module.exports = router;
