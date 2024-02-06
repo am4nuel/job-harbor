@@ -15,7 +15,7 @@ module.exports = (sequelize, dataTypes) => {
     },
     serviceCategory: {
       type: dataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     serviceId: {
       type: dataTypes.VIRTUAL,
