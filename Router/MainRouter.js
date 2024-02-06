@@ -153,6 +153,10 @@ router.get("/additionalinformation", async (req, res) => {
   };
   res.json(userData);
 });
+router.get("/getmyorders", async (req, res) => {
+  const orderData = await ServiceOrder.findAll();
+  res.send(orderData);
+});
 router.get("/service", async (req, res) => {
   const userData = await Services.findAll();
   console.log("hello World");
