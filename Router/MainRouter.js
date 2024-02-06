@@ -153,17 +153,15 @@ router.get("/additionalinformation", async (req, res) => {
   };
   res.json(userData);
 });
-
 router.get("/service", async (req, res) => {
   const userData = await Services.findAll();
+  console.log("hello World");
   res.json(userData);
 });
 router.post("/service", async (req, res) => {
   const bod = req.body;
   console.log(bod);
-
   await Services.create(bod);
-
   res.json(bod);
 });
 router.get("/serviceRequirement", async (req, res) => {
