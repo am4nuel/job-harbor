@@ -234,7 +234,13 @@ router.get("/projects", async (req, res) => {
   const orders = await ServiceOrder.findAll();
   const services = await Services.findAll();
   const users = await Users.findAll();
-  res.send({ orders: orders, services: services, users: users });
+  const orderedRequirements = await OrderedRequirements.findAll();
+  res.send({
+    orders: orders,
+    services: services,
+    users: users,
+    orderedRequirements: orderedRequirements,
+  });
   console.log("working");
 });
 router.get("/personalprojects", async (req, res) => {
