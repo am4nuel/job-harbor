@@ -13,6 +13,10 @@ module.exports = (sequelize, dataTypes) => {
       type: dataTypes.INTEGER,
       primaryKey: true,
     },
+    serviceCategory: {
+      type: dataTypes.STRING,
+      primaryKey: false,
+    },
     deliveryDate: {
       type: dataTypes.DATEONLY,
     },
