@@ -211,17 +211,14 @@ router.post("/placeorder", async (req, res) => {
 router.post("/updatelettergrade", async (req, res) => {
   try {
     const data = req.body;
-
     // Define the update data
     const updateData = {
       letterGrade: data.letterGrade,
     };
-
     // Define the condition (where clause)
     const condition = {
       id: data.id, // Assuming 'id' is the primary key of your Users table
     };
-
     // Update the letter grade with the where clause
     const [rowsUpdated, [updatedUser]] = await Users.update(updateData, {
       where: condition,
