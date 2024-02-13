@@ -28,6 +28,11 @@ module.exports = (sequelize, dataTypes) => {
       allowNull: true,
       defaultValue: "none",
     },
+    letterGrade: {
+      type: dataTypes.STRING,
+      allowNull: true,
+      defaultValue: "B",
+    },
     password: {
       type: dataTypes.STRING,
       allowNull: false,

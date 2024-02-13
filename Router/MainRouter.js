@@ -208,7 +208,43 @@ router.post("/placeorder", async (req, res) => {
   console.log(bod);
   res.send(orders);
 });
+router.post("/updatelettergrade", async (req, res) => {
+  try {
+    const data = req.body;
 
+    // Define the update data
+    const updateData = {
+      letterGrade: data.letterGrade,
+    };
+
+    // Define the condition (where clause)
+    const condition = {
+      id: data.id, // Assuming 'id' is the primary key of your Users table
+    };
+
+    // Update the letter grade with the where clause
+    const [rowsUpdated, [updatedUser]] = await Users.update(updateData, {
+      where: condition,
+      returning: true, // Get the updated user data
+    });
+
+    if (rowsUpdated > 0) {
+      res.status(200).json({
+        success: true,
+        message: "Letter grade updated successfully",
+        user: updatedUser,
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        message: "User not found or letter grade not updated",
+      });
+    }
+  } catch (error) {
+    console.error("Error updating letter grade:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+});
 router.post("/addrequirementtoorder", async (req, res) => {
   const bod = req.body;
   console.log(bod);
