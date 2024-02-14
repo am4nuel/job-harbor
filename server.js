@@ -3,12 +3,11 @@ const app = express();
 const db = require("./models");
 const cors = require("cors");
 const mainRouter = require("./Router/MainRouter");
-const multer = require("multer");
-const admin = require("firebase-admin");
-const serviceAccount = require("./upload2.json");
+const http = require("http");
+const socketIo = require("socket.io");
 const { Works, Requests } = require("./models");
-const http = require("http").createServer(app);
-const io = require("socket.io")(http, {
+const server = http.createServer(app);
+const io = socketIo(server, {
   cors: {
     origin: "http://localhost:5173", // Replace with your frontend origin
     methods: ["GET", "POST", "OPTIONS"],
@@ -57,7 +56,7 @@ app.post("/setrequests", async (req, res) => {
 });
 
 db.sequelize.sync().then(() => {
-  http.listen("3001", () => {
+  server.listen("3001", () => {
     console.log("Server is running on port 3001");
   });
 });
