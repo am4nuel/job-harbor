@@ -118,15 +118,19 @@ app.post("/upload", upload.array("files"), async (req, res) => {
   }
 });
 io.on("connection", (socket) => {
-  const userId = socket.handshake.query.userId; // Read user ID from query string
-  userSockets[userId] = socket; // Add user ID to socket mapping
-  socket.data.userId = userId; // Store user ID in the socket data
+  console.log("A user connected");
 
-  socket.on("disconnect", () => {
-    delete userSockets[userId]; // Remove user ID when disconnecting
+  // Handle custom event "updateRequest" from the client
+  socket.on("updateRequest", (data) => {
+    console.log("Received updateRequest:", data);
+
+    // Broadcast the updated data to all connected clients
+    io.emit("requestUpdated", data);
   });
 
-  // You can use this block to handle other events or setup additional logic
+  socket.on("disconnect", () => {
+    console.log("User disconnected");
+  });
 });
 // Trigger update event for the connected user when a new request is created
 app.post("/setrequests", async (req, res) => {
