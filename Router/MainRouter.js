@@ -1,8 +1,7 @@
 const express = require("express");
-const app = express();
+
 const router = express.Router();
-const http = require("http").createServer(app);
-const io = require("socket.io")(http);
+
 const {
   Users,
   Admins,
@@ -311,7 +310,6 @@ router.get("/personalorders", async (req, res) => {
 router.post("/setrequests", async (req, res) => {
   const data = await Requests.create(req.body);
   res.send(data);
-  io.to(userSockets[userId]).emit("requestUpdated", data);
 });
 
 router.get("/getrequests", async (req, res) => {

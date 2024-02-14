@@ -9,12 +9,12 @@ const serviceAccount = require("./upload2.json");
 const { Works } = require("./models");
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
-const userSockets = {};
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(express.static("client/build"));
-
+const userSockets = {};
 const session = require("express-session");
 const SequelizeStore = require("express-session-sequelize")(session.Store);
 const sessionStore = new SequelizeStore({
@@ -118,10 +118,18 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     delete userSockets[userId]; // Remove user ID when disconnecting
   });
-  // Handle any other events you need (e.g., emitting updates)
+
+  // Trigger update event for the connected user when a new request is created
+  app.post("/setrequests", async (req, res) => {
+    const data = await Requests.create(req.body);
+    res.send(data);
+
+    io.to(userSockets[userId]).emit("requestUpdated", data);
+  });
 });
+
 db.sequelize.sync().then(() => {
-  app.listen("3001", () => {
+  http.listen("3001", () => {
     console.log("Server is running on port 3001");
   });
 });
