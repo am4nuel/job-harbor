@@ -17,6 +17,24 @@ module.exports = (sequelize, dataTypes) => {
       type: dataTypes.STRING,
       primaryKey: false,
     },
+    orderPrice: {
+      type: dataTypes.STRING,
+      allowNull: false,
+    },
+    orderDetail: {
+      type: dataTypes.STRING,
+      allowNull: true,
+    },
+    orderStatus: {
+      type: dataTypes.STRING,
+      primaryKey: false,
+      defaultValue: "ordered",
+    },
+    assignedTo: {
+      type: dataTypes.STRING,
+      primaryKey: false,
+      defaultValue: "none",
+    },
     deliveryDate: {
       type: dataTypes.DATEONLY,
     },
