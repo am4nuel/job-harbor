@@ -24,9 +24,6 @@ module.exports = (sequelize, dataTypes) => {
       primaryKey: false,
       defaultValue: "requested",
     },
-    requestTime: {
-      type: dataTypes.TIME,
-    },
   });
   return Requests;
 };
