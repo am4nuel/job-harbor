@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const http = require("http").createServer(app);
 const io = require("socket.io")(http);
 const {
   Users,
