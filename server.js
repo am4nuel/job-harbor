@@ -3,11 +3,10 @@ const app = express();
 const db = require("./models");
 const cors = require("cors");
 const mainRouter = require("./Router/MainRouter");
-const http = require("http");
-const socketIo = require("socket.io");
+
 const { Works, Requests } = require("./models");
-const server = http.createServer(app);
-const io = socketIo(server, {
+const http = require("http").createServer(app);
+const io = require("socket.io")(http, {
   cors: {
     origin: "http://localhost:5173", // Replace with your frontend origin
     methods: ["GET", "POST", "OPTIONS"],
@@ -56,7 +55,7 @@ app.post("/setrequests", async (req, res) => {
 });
 
 db.sequelize.sync().then(() => {
-  server.listen("3001", () => {
+  http.listen("3001", () => {
     console.log("Server is running on port 3001");
   });
 });
