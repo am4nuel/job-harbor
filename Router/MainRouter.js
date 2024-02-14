@@ -1,8 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const http = require("http").createServer(app);
 const io = require("socket.io")(http);
-const userSockets = {};
 const {
   Users,
   Admins,
@@ -307,15 +305,7 @@ router.get("/personalorders", async (req, res) => {
   });
   res.send(orders);
 });
-io.on("connection", (socket) => {
-  const userId = socket.handshake.query.userId; // Read user ID from query string
-  userSockets[userId] = socket; // Add user ID to socket mapping
 
-  socket.on("disconnect", () => {
-    delete userSockets[userId]; // Remove user ID when disconnecting
-  });
-  // Handle any other events you need (e.g., emitting updates)
-});
 router.post("/setrequests", async (req, res) => {
   const data = await Requests.create(req.body);
   res.send(data);

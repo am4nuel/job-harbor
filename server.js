@@ -7,7 +7,9 @@ const multer = require("multer");
 const admin = require("firebase-admin");
 const serviceAccount = require("./upload2.json");
 const { Works } = require("./models");
-
+const http = require("http").createServer(app);
+const io = require("socket.io")(http);
+const userSockets = {};
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
@@ -109,7 +111,15 @@ app.post("/upload", upload.array("files"), async (req, res) => {
     res.status(500).send("Error uploading files");
   }
 });
+io.on("connection", (socket) => {
+  const userId = socket.handshake.query.userId; // Read user ID from query string
+  userSockets[userId] = socket; // Add user ID to socket mapping
 
+  socket.on("disconnect", () => {
+    delete userSockets[userId]; // Remove user ID when disconnecting
+  });
+  // Handle any other events you need (e.g., emitting updates)
+});
 db.sequelize.sync().then(() => {
   app.listen("3001", () => {
     console.log("Server is running on port 3001");
