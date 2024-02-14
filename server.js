@@ -120,18 +120,21 @@ app.post("/upload", upload.array("files"), async (req, res) => {
 io.on("connection", (socket) => {
   const userId = socket.handshake.query.userId; // Read user ID from query string
   userSockets[userId] = socket; // Add user ID to socket mapping
+  socket.data.userId = userId; // Store user ID in the socket data
 
   socket.on("disconnect", () => {
     delete userSockets[userId]; // Remove user ID when disconnecting
   });
 
-  // Trigger update event for the connected user when a new request is created
-  app.post("/setrequests", async (req, res) => {
-    const data = await Requests.create(req.body);
-    res.send(data);
+  // You can use this block to handle other events or setup additional logic
+});
+// Trigger update event for the connected user when a new request is created
+app.post("/setrequests", async (req, res) => {
+  const data = await Requests.create(req.body);
+  res.send(data);
 
-    io.to(userSockets[userId]).emit("requestUpdated", data);
-  });
+  // Emit the "requestUpdated" event to the specific user socket
+  io.to(userSockets[socket.data.userId]).emit("requestUpdated", data);
 });
 
 db.sequelize.sync().then(() => {
