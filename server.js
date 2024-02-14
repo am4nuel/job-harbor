@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(express.static("client/build"));
-const userSockets = {};
+
 const session = require("express-session");
 const SequelizeStore = require("express-session-sequelize")(session.Store);
 const sessionStore = new SequelizeStore({
@@ -48,12 +48,10 @@ app.use(cors());
 
 app.post("/setrequests", async (req, res) => {
   const data = await Requests.create(req.body);
-  // Broadcast the inserted data to all connected clients
-  io.emit("newRequest", data);
-
+  const requestData = await Requests.findAll();
+  io.emit("newRequest", requestData);
   res.send(data);
 });
-
 db.sequelize.sync().then(() => {
   http.listen("3001", () => {
     console.log("Server is running on port 3001");
