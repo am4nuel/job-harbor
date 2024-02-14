@@ -8,7 +8,13 @@ const admin = require("firebase-admin");
 const serviceAccount = require("./upload2.json");
 const { Works } = require("./models");
 const http = require("http").createServer(app);
-const io = require("socket.io")(http);
+const io = require("socket.io")(http, {
+  cors: {
+    origin: "http://localhost:5173", // Replace with your frontend origin
+    methods: ["GET", "POST", "OPTIONS"],
+    credentials: true, // If using credentials (cookies, tokens)
+  },
+});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
