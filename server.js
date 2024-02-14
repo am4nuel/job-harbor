@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(express.static("client/build"));
-
+const userSockets = {};
 const session = require("express-session");
 const SequelizeStore = require("express-session-sequelize")(session.Store);
 const sessionStore = new SequelizeStore({
@@ -45,11 +45,29 @@ function generateUniqueId() {
 // Replace with the desired folder name
 
 app.use(cors());
+io.on("connection", (socket) => {
+  // Listen for the user ID when a client connects
+  socket.on("setUserId", (userId) => {
+    userSockets[userId] = socket.id;
+  });
 
+  // Clean up userSockets on disconnection
+  socket.on("disconnect", () => {
+    const userId = Object.keys(userSockets).find(
+      (key) => userSockets[key] === socket.id
+    );
+    if (userId) {
+      delete userSockets[userId];
+    }
+  });
+});
 app.post("/setrequests", async (req, res) => {
   const data = await Requests.create(req.body);
-  const requestData = await Requests.findAll();
-  io.emit("newRequest", requestData);
+  // const requestData = await Requests.findAll();
+  const userId = req.body.requestedTo;
+  if (userId && userSockets[userId]) {
+    io.to(userSockets[userId]).emit("newRequest", data);
+  }
   res.send(data);
 });
 db.sequelize.sync().then(() => {
