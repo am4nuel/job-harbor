@@ -63,10 +63,10 @@ io.on("connection", (socket) => {
 });
 app.post("/setrequests", async (req, res) => {
   const data = await Requests.create(req.body);
-  // const requestData = await Requests.findAll();
+  const requestData = await Requests.findAll();
   const userId = req.body.requestedTo;
   if (userId && userSockets[userId]) {
-    io.to(userSockets[userId]).emit("newRequest", data);
+    io.to(userSockets[userId]).emit("newRequest", requestData);
   }
   res.send(data);
 });
