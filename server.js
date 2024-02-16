@@ -46,7 +46,6 @@ function generateUniqueId() {
 
 app.use(cors());
 io.on("connection", (socket) => {
-  console.log(`User connected with socket ID: ${socket.id}`);
   // Listen for the user ID when a client connects
   socket.on("setUserId", (userId) => {
     userSockets[userId] = socket.id;
