@@ -46,6 +46,7 @@ function generateUniqueId() {
 
 app.use(cors());
 io.on("connection", (socket) => {
+  console.log(`User connected with socket ID: ${socket.id}`);
   // Listen for the user ID when a client connects
   socket.on("setUserId", (userId) => {
     userSockets[userId] = socket.id;
@@ -73,6 +74,8 @@ app.post("/setrequests", async (req, res) => {
 app.post("/manageorderproject", async (req, res) => {
   const updateData = {
     orderStatus: req.body.orderStatus,
+    assignedTo:
+      req.body.orderStatus === "Pending" ? req.body.acceptedFor : "none",
   };
   const condition = {
     where: {
