@@ -4,7 +4,7 @@ const db = require("./models");
 const cors = require("cors");
 const mainRouter = require("./Router/MainRouter");
 
-const { Works, Requests } = require("./models");
+const { Works, Requests, ServiceOrder } = require("./models");
 const http = require("http").createServer(app);
 const io = require("socket.io")(http, {
   cors: {
@@ -70,6 +70,20 @@ app.post("/setrequests", async (req, res) => {
   }
   res.send(data);
 });
+app.post("/manageorderproject", async (req, res) => {
+  const updateData = {
+    orderStatus: req.body.orderStatus,
+  };
+  const condition = {
+    where: {
+      id: req.body.orderId,
+    },
+  };
+  await ServiceOrder.update(updateData, condition);
+  const orderData = await ServiceOrder.findAll();
+  res.send(orderData);
+});
+
 db.sequelize.sync().then(() => {
   http.listen("3001", () => {
     console.log("Server is running on port 3001");

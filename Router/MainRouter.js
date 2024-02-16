@@ -311,10 +311,8 @@ router.post("/setrequests", async (req, res) => {
   const data = await Requests.create(req.body);
   res.send(data);
 });
-
 router.get("/getrequests", async (req, res) => {
   const data = await Requests.findAll();
   res.send(data);
 });
-
 module.exports = router;
