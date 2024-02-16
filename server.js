@@ -74,7 +74,7 @@ app.post("/manageorderproject", async (req, res) => {
   const updateData = {
     orderStatus: req.body.orderStatus,
     assignedTo:
-      req.body.orderStatus === "Pending" ? req.body.acceptedFor : "none",
+      req.body.orderStatus === "Pending" ? req.body.assignedTo : "none",
   };
   const condition = {
     where: {
