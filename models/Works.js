@@ -8,6 +8,10 @@ module.exports = (sequelize, dataTypes) => {
       type: dataTypes.STRING,
       allowNull: false,
     },
+    fileCategory: {
+      type: dataTypes.STRING,
+      allowNull: false,
+    },
   });
   return Works;
 };
