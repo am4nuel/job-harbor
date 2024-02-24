@@ -57,6 +57,7 @@ router.post("/works", async (req, res) => {
     await Works.create({
       userId: req.body.userId,
       fileLink: element,
+      fileCategory: req.body.fileCategory,
     });
   });
   res.send("Done");
