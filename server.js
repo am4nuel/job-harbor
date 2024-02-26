@@ -84,8 +84,21 @@ app.post("/manageorderproject", async (req, res) => {
   await ServiceOrder.update(updateData, condition);
   const orderData = await ServiceOrder.findAll();
   const userId = req.body.acceptedFor;
-  if (updateData.orderStatus === "ordered") {
-    Requests.update(
+  if (updateData.orderStatus === "Pending") {
+    await Requests.update(
+      { requestStatus: "accepted" },
+      {
+        where: {
+          orderId: req.body.orderId,
+        },
+      }
+    );
+    if (userId && userSockets[userId]) {
+      io.to(userSockets[userId]).emit("acceptedRequest", orderData);
+      res.send(orderData);
+    }
+  } else if (updateData.orderStatus === "ordered") {
+    await Requests.update(
       { requestStatus: "canceled" },
       {
         where: {
@@ -93,11 +106,16 @@ app.post("/manageorderproject", async (req, res) => {
         },
       }
     );
+    if (userId && userSockets[userId]) {
+      io.to(userSockets[userId]).emit("canceledRequest", orderData);
+      res.send(orderData);
+    }
+  } else if (updateData.orderStatus === "request sent") {
+    if (userId && userSockets[userId]) {
+      io.to(userSockets[userId]).emit("newRequest", orderData);
+      res.send(orderData);
+    }
   }
-  if (userId && userSockets[userId]) {
-    io.to(userSockets[userId]).emit("newRequest", orderData);
-  }
-  res.send(orderData);
 });
 
 db.sequelize.sync().then(() => {
