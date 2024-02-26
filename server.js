@@ -81,9 +81,9 @@ app.post("/manageorderproject", async (req, res) => {
       id: req.body.orderId,
     },
   };
+  await ServiceOrder.update(updateData, condition);
   const userId = req.body.acceptedFor;
   if (updateData.orderStatus === "request sent") {
-    await ServiceOrder.update(updateData, condition);
     const orderData = await ServiceOrder.findAll();
     if (userId && userSockets[userId]) {
       io.to(userSockets[userId]).emit("newRequest", orderData);
@@ -91,7 +91,6 @@ app.post("/manageorderproject", async (req, res) => {
     }
   } else if (updateData.orderStatus === "Pending") {
     const orderData = await ServiceOrder.findAll();
-
     await Requests.update(
       { requestStatus: "accepted" },
       {
