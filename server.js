@@ -94,7 +94,10 @@ app.post("/manageorderproject", async (req, res) => {
       }
     );
     if (userId && userSockets[userId]) {
-      io.to(userSockets[userId]).emit("acceptedRequest", orderData);
+      io.to(userSockets[userId]).emit("acceptedRequest", {
+        acceptedRequest: req.body.orderId,
+        orderData: orderData,
+      });
       res.send(orderData);
     }
   } else if (updateData.orderStatus === "ordered") {
@@ -107,7 +110,10 @@ app.post("/manageorderproject", async (req, res) => {
       }
     );
     if (userId && userSockets[userId]) {
-      io.to(userSockets[userId]).emit("canceledRequest", orderData);
+      io.to(userSockets[userId]).emit("canceledRequest", {
+        declinedRequest: req.body.orderId,
+        orderData: orderData,
+      });
       res.send(orderData);
     }
   } else if (updateData.orderStatus === "request sent") {
