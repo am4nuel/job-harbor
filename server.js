@@ -81,10 +81,17 @@ app.post("/manageorderproject", async (req, res) => {
       id: req.body.orderId,
     },
   };
-  await ServiceOrder.update(updateData, condition);
-  const orderData = await ServiceOrder.findAll();
   const userId = req.body.acceptedFor;
-  if (updateData.orderStatus === "Pending") {
+  if (updateData.orderStatus === "request sent") {
+    await ServiceOrder.update(updateData, condition);
+    const orderData = await ServiceOrder.findAll();
+    if (userId && userSockets[userId]) {
+      io.to(userSockets[userId]).emit("newRequest", orderData);
+      res.send(orderData);
+    }
+  } else if (updateData.orderStatus === "Pending") {
+    const orderData = await ServiceOrder.findAll();
+
     await Requests.update(
       { requestStatus: "accepted" },
       {
@@ -101,6 +108,7 @@ app.post("/manageorderproject", async (req, res) => {
       res.send(orderData);
     }
   } else if (updateData.orderStatus === "ordered") {
+    const orderData = await ServiceOrder.findAll();
     await Requests.update(
       { requestStatus: "canceled" },
       {
@@ -114,11 +122,6 @@ app.post("/manageorderproject", async (req, res) => {
         declinedRequest: req.body.orderId,
         orderData: orderData,
       });
-      res.send(orderData);
-    }
-  } else if (updateData.orderStatus === "request sent") {
-    if (userId && userSockets[userId]) {
-      io.to(userSockets[userId]).emit("newRequest", orderData);
       res.send(orderData);
     }
   }
