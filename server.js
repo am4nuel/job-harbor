@@ -40,7 +40,7 @@ function generateUniqueId() {
   const timestampPart = new Date().getTime().toString(36);
   return randomPart + timestampPart;
 }
-router.get("/updateprogress", async (req, res) => {
+app.get("/updateprogress", async (req, res) => {
   const updateData = {
     orderStatus: req.body.progress,
   };
