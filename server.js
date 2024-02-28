@@ -49,10 +49,13 @@ app.post("/updateprogress", async (req, res) => {
       id: req.body.orderId,
     },
   };
-  await ServiceOrder.update(updateData, condition);
+  const orderData = await ServiceOrder.update(updateData, condition);
+  const requestData = await Requests.findAll();
+  io.to(
+    requestData.filter((item) => item.orderId === req.body.orderId)[0]
+      .requestedFrom
+  ).emit("newRequest", orderData);
 });
-// Initialize Firebase Admin with your service account
-// Replace with the desired folder name
 
 app.use(cors());
 io.on("connection", (socket) => {
