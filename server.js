@@ -40,7 +40,17 @@ function generateUniqueId() {
   const timestampPart = new Date().getTime().toString(36);
   return randomPart + timestampPart;
 }
-
+router.get("/updateprogress", async (req, res) => {
+  const updateData = {
+    orderStatus: req.body.progress,
+  };
+  const condition = {
+    where: {
+      id: req.body.orderId,
+    },
+  };
+  await ServiceOrder.update(updateData, condition);
+});
 // Initialize Firebase Admin with your service account
 // Replace with the desired folder name
 
