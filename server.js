@@ -52,8 +52,9 @@ app.post("/updateprogress", async (req, res) => {
   const orderData = await ServiceOrder.update(updateData, condition);
   const requestData = await Requests.findAll();
   io.to(
-    requestData.filter((item) => item.orderId === req.body.orderId)[0]
-      .requestedFrom
+    requestData.filter(
+      (item) => item.orderId.toString() === req.body.orderId.toString()
+    )[0].requestedFrom
   ).emit("newRequest", orderData);
 });
 
