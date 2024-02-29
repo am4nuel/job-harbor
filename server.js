@@ -68,6 +68,7 @@ app.post("/updateprogress", async (req, res) => {
     },
   };
   const orderData = await ServiceOrder.update(updateData, condition);
+  const services = await ServiceOrder.findAll();
   const requestData = await Requests.findAll();
   io.to(
     userSockets[
@@ -78,6 +79,19 @@ app.post("/updateprogress", async (req, res) => {
       )
     ]
   ).emit("progressUpdate", orderData);
+  io.to(
+    userSockets[
+      services.filter(
+        (item) =>
+          item.id ===
+          parseInt(
+            requestData.filter(
+              (item) => item.orderId.toString() === req.body.orderId.toString()
+            )[0].orderId
+          )
+      )[0].userId
+    ]
+  ).emit("progressUpdateUser", orderData);
 });
 
 app.post("/setrequests", async (req, res) => {
