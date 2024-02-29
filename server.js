@@ -40,6 +40,24 @@ function generateUniqueId() {
   const timestampPart = new Date().getTime().toString(36);
   return randomPart + timestampPart;
 }
+
+app.use(cors());
+io.on("connection", (socket) => {
+  // Listen for the user ID when a client connects
+  socket.on("setUserId", (userId) => {
+    userSockets[userId] = socket.id;
+  });
+
+  // Clean up userSockets on disconnection
+  socket.on("disconnect", () => {
+    const userId = Object.keys(userSockets).find(
+      (key) => userSockets[key] === socket.id
+    );
+    if (userId) {
+      delete userSockets[userId];
+    }
+  });
+});
 app.post("/updateprogress", async (req, res) => {
   const updateData = {
     orderStatus: req.body.progress,
@@ -62,23 +80,6 @@ app.post("/updateprogress", async (req, res) => {
   ).emit("progressUpdate", orderData);
 });
 
-app.use(cors());
-io.on("connection", (socket) => {
-  // Listen for the user ID when a client connects
-  socket.on("setUserId", (userId) => {
-    userSockets[userId] = socket.id;
-  });
-
-  // Clean up userSockets on disconnection
-  socket.on("disconnect", () => {
-    const userId = Object.keys(userSockets).find(
-      (key) => userSockets[key] === socket.id
-    );
-    if (userId) {
-      delete userSockets[userId];
-    }
-  });
-});
 app.post("/setrequests", async (req, res) => {
   const data = await Requests.create(req.body);
   const requestData = await Requests.findAll();
