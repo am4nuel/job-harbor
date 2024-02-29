@@ -59,7 +59,7 @@ app.post("/updateprogress", async (req, res) => {
         )[0].requestedFrom
       )
     ]
-  ).emit("newRequest", orderData);
+  ).emit("progressUpdate", orderData);
 });
 
 app.use(cors());
