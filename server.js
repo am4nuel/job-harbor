@@ -183,6 +183,8 @@ app.post("/payment", async (req, res) => {
   };
   request(options, function (error, response) {
     if (error) throw new Error(error);
+    const responseBody = JSON.parse(response.body);
+    res.redirect(responseBody.data.checkout_url);
   });
 });
 app.get("/pay", function (req, res) {
