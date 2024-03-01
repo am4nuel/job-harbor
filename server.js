@@ -184,7 +184,7 @@ app.post("/payment", async (req, res) => {
   request(options, function (error, response) {
     if (error) throw new Error(error);
     const responseBody = JSON.parse(response.body);
-    res.redirect(responseBody.data.checkout_url);
+    res.send(responseBody.data.checkout_url);
   });
 });
 app.get("/pay", function (req, res) {
@@ -198,7 +198,7 @@ app.get("/pay", function (req, res) {
   request(options, function (error, response) {
     if (error) throw new Error(error);
     const responseBody = JSON.parse(response.body);
-    res.send(responseBody);
+    res.redirect("https://iwork-demo.onrender.com");
     console.log("payment successful");
   });
 });
