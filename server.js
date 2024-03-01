@@ -183,7 +183,6 @@ app.post("/payment", async (req, res) => {
   };
   request(options, function (error, response) {
     if (error) throw new Error(error);
-    console.log(response.body.data.checkout_url);
   });
 });
 app.get("/pay", function (req, res) {
