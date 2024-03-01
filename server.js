@@ -1,9 +1,10 @@
 const express = require("express");
 const app = express();
+var request = require("request");
 const db = require("./models");
 const cors = require("cors");
 const mainRouter = require("./Router/MainRouter");
-
+var text_ref, phone_Number;
 const { Works, Requests, ServiceOrder } = require("./models");
 const http = require("http").createServer(app);
 const io = require("socket.io")(http, {
@@ -157,7 +158,49 @@ app.post("/manageorderproject", async (req, res) => {
     }
   }
 });
-
+app.post("/payment", async (req, res) => {
+  text_ref = req.body.refText;
+  var options = {
+    method: "POST",
+    url: "https://api.chapa.co/v1/transaction/initialize",
+    headers: {
+      Authorization: "Bearer CHASECK_TEST-IjiumdwjjtyyHauZeofjFkm2248FIVG4",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      amount: req.body.amount,
+      currency: "ETB",
+      email: req.body.email,
+      first_name: req.body.firstName,
+      last_name: req.body.middleName,
+      phone_number: req.body.phoneNumber,
+      tx_ref: req.body.refText,
+      callback_url: "https://webhook.site/b6f1d7b2-e3e5-4e47-8da0-7727c6ae4980",
+      return_url: "https://iwork.onrender.com/pay",
+      "customization[title]": "Payment for my favourite merchant",
+      "customization[description]": "I love online payments",
+    }),
+  };
+  request(options, function (error, response) {
+    if (error) throw new Error(error);
+    console.log(response.body.data.checkout_url);
+  });
+});
+app.get("/pay", function (req, res) {
+  var options = {
+    method: "GET",
+    url: "https://api.chapa.co/v1/transaction/verify/" + text_ref,
+    headers: {
+      Authorization: "Bearer CHASECK_TEST-Nt7a5Xqx232BeJrx3od1eP3nwxuqTAr9",
+    },
+  };
+  request(options, function (error, response) {
+    if (error) throw new Error(error);
+    const responseBody = JSON.parse(response.body);
+    res.send(responseBody);
+    console.log("payment successful");
+  });
+});
 db.sequelize.sync().then(() => {
   http.listen("3001", () => {
     console.log("Server is running on port 3001");
