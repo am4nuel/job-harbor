@@ -104,6 +104,14 @@ app.post("/setrequests", async (req, res) => {
   }
   res.send(data);
 });
+app.post("/chat", async (req, res) => {
+  const userId = req.body.receiver;
+  const message = req.body.message;
+  if (userId && userSockets[userId]) {
+    io.to(userSockets[userId]).emit("chat", message);
+  }
+  res.send(data);
+});
 app.post("/manageorderproject", async (req, res) => {
   const updateData = {
     orderStatus: req.body.orderStatus,
