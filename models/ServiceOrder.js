@@ -35,6 +35,11 @@ module.exports = (sequelize, dataTypes) => {
       primaryKey: false,
       defaultValue: "none",
     },
+    assignedBy: {
+      type: dataTypes.STRING,
+      primaryKey: false,
+      defaultValue: "none",
+    },
     deliveryDate: {
       type: dataTypes.DATEONLY,
     },

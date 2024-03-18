@@ -9,7 +9,7 @@ const { Works, Requests, ServiceOrder } = require("./models");
 const http = require("http").createServer(app);
 const io = require("socket.io")(http, {
   cors: {
-    origin: "https://iwork-demo.onrender.com", // Replace with your frontend origin
+    origin: "http://localhost:5173", // Replace with your frontend origin
     methods: ["GET", "POST", "OPTIONS"],
     credentials: true, // If using credentials (cookies, tokens)
   },
@@ -34,14 +34,12 @@ app.use(
     store: sessionStore,
   })
 );
-
 app.use("/register", mainRouter);
 function generateUniqueId() {
   const randomPart = Math.random().toString(36).substring(2, 10);
   const timestampPart = new Date().getTime().toString(36);
   return randomPart + timestampPart;
 }
-
 app.use(cors());
 io.on("connection", (socket) => {
   // Listen for the user ID when a client connects
@@ -105,12 +103,19 @@ app.post("/setrequests", async (req, res) => {
   res.send(data);
 });
 app.post("/chat", async (req, res) => {
-  const userId = req.body.receiver;
+  console.log(req.body);
+  const receiver = req.body.receiver;
+  const sender = req.body.sender;
   const message = req.body.message;
-  if (userId && userSockets[userId]) {
-    io.to(userSockets[userId]).emit("chat", message);
+  if (receiver && userSockets[receiver]) {
+    io.to(userSockets[receiver]).emit("chat", {
+      sender: sender,
+      receiver: receiver,
+      message: message,
+    });
   }
-  res.send(data);
+  res.send("success!");
+  console.log(message);
 });
 app.post("/manageorderproject", async (req, res) => {
   const updateData = {
@@ -134,6 +139,14 @@ app.post("/manageorderproject", async (req, res) => {
     const orderData = await ServiceOrder.findAll();
     await Requests.update(
       { requestStatus: "accepted" },
+      {
+        where: {
+          orderId: req.body.orderId,
+        },
+      }
+    );
+    await ServiceOrder.update(
+      { assignedBy: req.body.acceptedFor },
       {
         where: {
           orderId: req.body.orderId,
