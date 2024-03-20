@@ -149,7 +149,7 @@ app.post("/manageorderproject", async (req, res) => {
       { assignedBy: req.body.acceptedFor },
       {
         where: {
-          orderId: req.body.orderId,
+          id: req.body.orderId,
         },
       }
     );
