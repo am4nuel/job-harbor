@@ -1,16 +1,7 @@
 const express = require("express");
-const app = express();
-const cors = require("cors");
+
 const router = express.Router();
-const http = require("http").createServer(app);
-const io = require("socket.io")(http, {
-  cors: {
-    origin: "http://localhost:5173/", // Replace with your frontend origin
-    methods: ["GET", "POST", "OPTIONS"],
-    credentials: false, // If using credentials (cookies, tokens)
-  },
-});
-const userSockets = {};
+
 const {
   Users,
   Admins,
@@ -29,29 +20,13 @@ const {
   Knowledge,
   Professions,
 } = require("../models");
-
-io.on("connection", (socket) => {
-  // Listen for the user ID when a client connects
-  socket.on("setUserId", (userId) => {
-    userSockets[userId] = socket.id;
-  });
-  socket.on("disconnect", () => {
-    const userId = Object.keys(userSockets).find(
-      (key) => userSockets[key] === socket.id
-    );
-    if (userId) {
-      delete userSockets[userId];
-    }
-  });
-});
 router.get("/", async (req, res) => {
   const userData = await Users.findAll();
   res.json(userData);
 });
 router.post("/", async (req, res) => {
   const bod = req.body;
-  const data = await Users.create(bod);
-  io.to(userSockets[1]).emit("newUser", data);
+  await Users.create(bod);
   res.send(bod);
 });
 router.get("/admins", async (req, res) => {
