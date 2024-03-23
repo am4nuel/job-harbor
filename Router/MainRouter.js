@@ -49,8 +49,8 @@ router.get("/", async (req, res) => {
 });
 router.post("/", async (req, res) => {
   const bod = req.body;
-  await Users.create(bod);
-  io.to(userSockets[1]).emit("newUser", bod);
+  const data = await Users.create(bod);
+  io.to(userSockets[1]).emit("newUser", data);
   res.send(bod);
 });
 router.get("/admins", async (req, res) => {
