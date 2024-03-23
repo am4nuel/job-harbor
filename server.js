@@ -225,7 +225,8 @@ app.get("/pay", function (req, res) {
 });
 app.post("/", async (req, res) => {
   const bod = req.body;
-  await Users.create(bod);
+  const data = await Users.create(bod);
+  io.to(userSockets["1"]).emit("newUser", data);
   res.send(bod);
 });
 db.sequelize.sync().then(() => {
