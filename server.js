@@ -226,8 +226,18 @@ app.get("/pay", function (req, res) {
 app.post("/", async (req, res) => {
   const bod = req.body;
   const data = await Users.create(bod);
-  io.to(userSockets["1"]).emit("newUser", data);
-  res.send(bod);
+  io.to(userSockets["1"]).emit("newUser", {
+    notificationMessage:
+      data.firstName +
+      "\t" +
+      data.middleName +
+      "\t" +
+      "Joined Job Harbor as a" +
+      "\t" +
+      data.userType,
+    notificationTitle: "New User Joined",
+  });
+  res.send(data);
 });
 db.sequelize.sync().then(() => {
   http.listen("3001", () => {
