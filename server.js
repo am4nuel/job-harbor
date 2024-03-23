@@ -5,7 +5,7 @@ const db = require("./models");
 const cors = require("cors");
 const mainRouter = require("./Router/MainRouter");
 var text_ref, phone_Number;
-const { Works, Requests, ServiceOrder } = require("./models");
+const { Works, Requests, ServiceOrder, Users } = require("./models");
 const http = require("http").createServer(app);
 const io = require("socket.io")(http, {
   cors: {
@@ -65,11 +65,7 @@ app.post("/updateprogress", async (req, res) => {
       id: req.body.orderId,
     },
   };
-  app.post("/", async (req, res) => {
-    const bod = req.body;
-    await Users.create(bod);
-    res.send(bod);
-  });
+
   const orderData = await ServiceOrder.update(updateData, condition);
   const services = await ServiceOrder.findAll();
   const requestData = await Requests.findAll();
@@ -226,6 +222,11 @@ app.get("/pay", function (req, res) {
     res.redirect("https://iwork-demo.onrender.com");
     console.log("payment successful");
   });
+});
+app.post("/", async (req, res) => {
+  const bod = req.body;
+  await Users.create(bod);
+  res.send(bod);
 });
 db.sequelize.sync().then(() => {
   http.listen("3001", () => {
