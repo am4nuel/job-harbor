@@ -65,6 +65,11 @@ app.post("/updateprogress", async (req, res) => {
       id: req.body.orderId,
     },
   };
+  app.post("/", async (req, res) => {
+    const bod = req.body;
+    await Users.create(bod);
+    res.send(bod);
+  });
   const orderData = await ServiceOrder.update(updateData, condition);
   const services = await ServiceOrder.findAll();
   const requestData = await Requests.findAll();

@@ -24,11 +24,7 @@ router.get("/", async (req, res) => {
   const userData = await Users.findAll();
   res.json(userData);
 });
-router.post("/", async (req, res) => {
-  const bod = req.body;
-  await Users.create(bod);
-  res.send(bod);
-});
+
 router.get("/admins", async (req, res) => {
   const userData = await Admins.findAll();
   res.json(userData);
