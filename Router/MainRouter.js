@@ -4,7 +4,7 @@ const router = express.Router();
 const http = require("http").createServer(app);
 const io = require("socket.io")(http, {
   cors: {
-    origin: "https://iwork-demo.onrender.com", // Replace with your frontend origin
+    origin: "http://localhost:5173/", // Replace with your frontend origin
     methods: ["GET", "POST", "OPTIONS"],
     credentials: false, // If using credentials (cookies, tokens)
   },
