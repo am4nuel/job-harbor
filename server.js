@@ -11,10 +11,9 @@ const io = require("socket.io")(http, {
   cors: {
     origin: "https://iwork-demo.onrender.com", // Replace with your frontend origin
     methods: ["GET", "POST", "OPTIONS"],
-    credentials: true, // If using credentials (cookies, tokens)
+    credentials: false, // If using credentials (cookies, tokens)
   },
 });
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
