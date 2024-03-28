@@ -232,7 +232,7 @@ app.post("/", async (req, res) => {
       "\t" +
       data.middleName +
       "\t" +
-      "Joined Job Harbor as a" +
+      "Joined Job Harbor as " +
       "\t" +
       data.userType,
     notificationTitle: "New User Joined",

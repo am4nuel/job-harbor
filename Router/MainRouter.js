@@ -193,6 +193,15 @@ router.get("/skills", async (req, res) => {
   }
   console.log(req.query.value);
 });
+
+router.get("/suggestionlists", async (req, res) => {
+  const skills = await Skills.findAll();
+
+  const softwares = await Knowledge.findAll();
+
+  res.send({ skillList: skills, softwares: softwares });
+});
+
 router.post("/serviceRequirement", async (req, res) => {
   const bod = req.body;
   console.log(bod);
