@@ -8,13 +8,16 @@ const {
   Services,
   ServiceRequirements,
   Skills,
+  UserCertificate,
   UserSkills,
   Works,
   UserEducation,
   ServiceOrder,
+  UserExperience,
   Requests,
   OrderedRequirements,
   UserLanguages,
+  UserPrevProjects,
   UserSocialMedias,
   UserKnowledgeAreas,
   UserProfessions,
@@ -219,6 +222,24 @@ router.post("/usercvdata", async (req, res) => {
   switch (req.body.type) {
     case "education":
       data = await UserEducation.create(bod);
+      break;
+    case "certificate":
+      data = await UserCertificate.create(bod);
+      break;
+    case "experience":
+      data = await UserExperience.create(bod);
+      break;
+    case "projects":
+      data = await UserPrevProjects.create(bod);
+      break;
+    case "language":
+      data = await UserLanguages.create(bod);
+      break;
+    case "skills":
+      data = await UserSkills.create(bod);
+      break;
+    case "softwares":
+      data = await UserKnowledgeAreas.create(bod);
       break;
     default:
       console.log("nigga");
