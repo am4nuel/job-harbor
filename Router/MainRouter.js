@@ -10,7 +10,7 @@ const {
   Skills,
   UserSkills,
   Works,
-  UserEducations,
+  UserEducation,
   ServiceOrder,
   Requests,
   OrderedRequirements,
@@ -218,7 +218,7 @@ router.post("/usercvdata", async (req, res) => {
   let data = {};
   switch (req.body.type) {
     case "education":
-      data = await UserEducations.create(bod);
+      data = await UserEducation.create(bod);
       break;
     default:
       console.log("nigga");
