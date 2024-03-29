@@ -10,6 +10,7 @@ const {
   Skills,
   UserSkills,
   Works,
+  UserEducations,
   ServiceOrder,
   Requests,
   OrderedRequirements,
@@ -211,6 +212,19 @@ router.post("/serviceRequirement", async (req, res) => {
   });
   res.json(bod);
 });
+
+router.post("/usercvdata", async (req, res) => {
+  const bod = req.body.data;
+  switch (req.body.type) {
+    case "education":
+      await UserEducations.create(bod);
+      break;
+    default:
+      console.log("nigga");
+      break;
+  }
+});
+
 router.post("/placeorder", async (req, res) => {
   const bod = req.body;
   const orders = await ServiceOrder.create(bod);
