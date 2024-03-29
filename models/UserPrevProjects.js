@@ -1,17 +1,21 @@
 module.exports = (sequelize, dataTypes) => {
-  const UserKnowledgeAreas = sequelize.define("UserKnowledgeAreas", {
+  const UserPrevProjects = sequelize.define("UserPrevProjects", {
     userId: {
       type: dataTypes.STRING,
       allowNull: false,
     },
-    knowledgeName: {
+    name: {
       type: dataTypes.STRING,
       allowNull: false,
     },
-    level: {
+    role: {
+      type: dataTypes.STRING,
+      allowNull: false,
+    },
+    description: {
       type: dataTypes.STRING,
       allowNull: false,
     },
   });
-  return UserKnowledgeAreas;
+  return UserPrevProjects;
 };

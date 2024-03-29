@@ -12,6 +12,7 @@ module.exports = (sequelize, dataTypes) => {
         autoIncrement: true,
       },
     },
+
     {
       timestamps: false,
     }
