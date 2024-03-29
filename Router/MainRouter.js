@@ -215,14 +215,16 @@ router.post("/serviceRequirement", async (req, res) => {
 
 router.post("/usercvdata", async (req, res) => {
   const bod = req.body.data;
+  let data = {};
   switch (req.body.type) {
     case "education":
-      await UserEducations.create(bod);
+      data = await UserEducations.create(bod);
       break;
     default:
       console.log("nigga");
       break;
   }
+  res.send(data);
 });
 
 router.post("/placeorder", async (req, res) => {
